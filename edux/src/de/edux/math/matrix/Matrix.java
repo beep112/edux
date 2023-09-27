@@ -1,11 +1,14 @@
 package de.edux.math.matrix;
+import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.ForkJoinPool;
 
 public class Matrix {
 	
-	// storing row and cols and then the 2D array;
+	// storing row and cols and then the 2D array and parallel task start
+	private static final ForkJoinPool pool = new ForkJoinPool();
 	private int rows;
 	private int cols;
-	private double[][] data;
+	private float[][] data;
 	
 	// Constructors for the matrix class
 	// can either input data or input rows and columns
@@ -13,10 +16,10 @@ public class Matrix {
 	public Matrix(int numRows, int numCols) {
 		this.rows = numRows;
 		this.cols = numCols;
-		data = new double[rows][cols];
+		data = new float[rows][cols];
 	}
 	
-	public Matrix(double[][] inputData) {
+	public Matrix(float[][] inputData) {
 		this.rows = inputData.length;
 		this.cols = inputData[0].length;
 		data = inputData;
@@ -30,11 +33,11 @@ public class Matrix {
 		return cols;
 	}
 	// returns the current data that is being stored
-	public double[][] getData(){
+	public float[][] getData(){
 		return data;
 	}
 	// will set set to data to the current input data only if columns and rows match
-    public void setData(double[][] newData) {
+    public void setData(float[][] newData) {
         if (newData.length != rows || newData[0].length != cols) {
             throw new IllegalArgumentException("New data dimensions must match the matrix dimensions.");
         }
@@ -49,9 +52,9 @@ public class Matrix {
             throw new IllegalArgumentException("Matrix dimensions for rows and colums must match for addition");
 		}
 		
-		double[][] aData = a.getData();
-		double[][] bData = b.getData();
-		double[][] result = new double[a.getRows()][b.getColumns()];
+		float[][] aData = a.getData();
+		float[][] bData = b.getData();
+		float[][] result = new float[a.getRows()][b.getColumns()];
 		for(int r = 0; r < a.getRows(); r++) {
 			for(int c = 0; c < a.getColumns(); c++) {
 				result[r][c] = aData[r][c] + bData[r][c];
@@ -68,9 +71,9 @@ public class Matrix {
             throw new IllegalArgumentException("Matrix dimensions for rows and colums must match for addition");
 		}
 		
-		double[][] aData = a.getData();
-		double[][] bData = b.getData();
-		double[][] result = new double[a.getRows()][b.getColumns()];
+		float[][] aData = a.getData();
+		float[][] bData = b.getData();
+		float[][] result = new float[a.getRows()][b.getColumns()];
 		for(int r = 0; r < a.getRows(); r++) {
 			for(int c = 0; c < a.getColumns(); c++) {
 				result[r][c] = aData[r][c] - bData[r][c];
@@ -80,9 +83,29 @@ public class Matrix {
 		
 	}
 	
-	public Matrix multiplication(Matrix a, Matrix b) {
+	public Matrix scalarMultiply(Matrix a, double constant) {
+		float[][] result = a.getData();
+		for(int r = 0; r<a.getRows(); r++) {
+			for(int c = 0; c<a.getColumns(); c++) {
+				result[r][c] *= constant;
+			}
+		}
+		return new Matrix(result);
+	}
+	
+	public Matrix multiply(Matrix a, Matrix b) {
+		int rowsA = a.getRows();
+		int colsA = a.getColumns();
+		int rowsB = b.getRows();
+		int colsB = b.getColumns();
 		
-		return new Matrix(1, 1);
+		if(colsA != rowsB) {
+			throw new IllegalArgumentException("Matrix dimension are not compatible");
+		}
+		
+		float[][] result = new float[rowsA][colsB];
+		pool.invoke(new MultiplyTask(a, b, result, 0, 0, 0, 0, 0, 0, rowsA, colsB, colsA));
+		return new Matrix(result);
 	}
 	
 	// if the vector would need to be printed to console
