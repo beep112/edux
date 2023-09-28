@@ -9,7 +9,7 @@ import de.edux.math.matrix.Matrix;
 
 import org.junit.jupiter.api.Test;
 
-class AddTest {
+class MatrixTest {
 
 	@Test
 	void doesAddingSameMatrixEqualTwoTimesScalarMultiple() {
@@ -17,7 +17,7 @@ class AddTest {
 		Matrix test = new Matrix(data);
 		Matrix add = test.add(new Matrix(data));
 		test.scalarMultiply(2);
-		assertEquals(add.print(), test.print());
+		assertEquals(add.toString(), test.toString());
 		
 	}
 	@Test
@@ -33,11 +33,10 @@ class AddTest {
 		Matrix a = new Matrix(data1);
 		Matrix b = new Matrix(data2);
 		Matrix result = a.add(b);
-		assertEquals(result.print(), "14.54457 17.10569 19.0111 20.80108 \n"
-				+ "7.18182 9.20203 11.0203 12.67255 \n"
-				+ "18.24002 21.00248 23.89848 24.48784 \n"
-				+ "18.69609 21.27742 23.001099 25.44737 \n"
-				+ "");
+		assertEquals(result.toString(), "[[14.54457, 17.10569, 19.0111, 20.80108],\n"
+				+ "[7.18182, 9.20203, 11.0203, 12.67255],\n"
+				+ "[18.24002, 21.00248, 23.89848, 24.48784],\n"
+				+ "[18.69609, 21.27742, 23.001099, 25.44737]]");
 	}
 	@Test
 	void handleAdditonToAZeroMatrix() {
@@ -55,34 +54,41 @@ class AddTest {
 				+ "");
 	
 	}
-	@Test
-	void handleMismatchDimensions() {
-		assertThrows(IllegalArgumentException.class, new Executable() {
-            
-            @Override
-            public void execute() throws Throwable {
-            	float[][] data = {{1f,2f},{1f,2f},{1f,2f}};
-            	float[][] data1 = {{1f,2f,3f},{1f,2f,3f},{1f,2f,3f}};
-                Matrix a = new Matrix(data);
-                Matrix b = new Matrix(data1);
-                a.add(b);
-            }
+
+    @Test
+    public void testMatrixAdditionInvalidDimensions() {
+        float[][] dataA = {{1, 2, 3}, {4, 5, 6}};
+        float[][] dataB = {{7, 8, 9}};
+        Matrix matrixA = new Matrix(dataA);
+        Matrix matrixB = new Matrix(dataB);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            matrixA.add(matrixB);
         });
-	}
-}
-class subtractTest{
-	@Test
-	void handleMismatchDimensions() {
-		assertThrows(IllegalArgumentException.class, new Executable() {
-            
-            @Override
-            public void execute() throws Throwable {
-            	float[][] data = {{1f,2f},{1f,2f},{1f,2f}};
-            	float[][] data1 = {{1f,2f,3f},{1f,2f,3f},{1f,2f,3f}};
-                Matrix a = new Matrix(data);
-                Matrix b = new Matrix(data1);
-                a.subtract(b);
-            }
+    }
+
+    @Test
+    public void testMatrixSubtractionInvalidDimensions() {
+        float[][] dataA = {{1, 2, 3}, {4, 5, 6}};
+        float[][] dataB = {{7, 8, 9}};
+        Matrix matrixA = new Matrix(dataA);
+        Matrix matrixB = new Matrix(dataB);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            matrixA.subtract(matrixB);
         });
-	}
+    }
+
+    @Test
+    public void testMatrixMultiplicationInvalidDimensions() {
+        float[][] dataA = {{1, 2, 3, 4}, {4, 5, 6, 6}};
+        float[][] dataB = {{7, 8}, {9, 10}, {11, 12}};
+        Matrix matrixA = new Matrix(dataA);
+        Matrix matrixB = new Matrix(dataB);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            matrixA.multiply(matrixB);
+        });
+    }
 }
+

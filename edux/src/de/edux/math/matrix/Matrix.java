@@ -1,21 +1,29 @@
 package de.edux.math.matrix;
+import java.util.Arrays;
 
 public class Matrix {
 
-	// storing row and cols and then the 2D array and parallel task start
+	// Storing row and cols and then the 2D array
 	private final int rows;
 	private final int cols;
 	private final float[][] data;
 
-	// Constructors for the matrix class
-	// can either input data or input rows and columns
 
+    /**
+     * Creates a empty matrix from the provided rows and columns.
+     *
+     * @param rows and cols, integer values of the row and column length
+     */
 	public Matrix(int rows, int cols) {
 		this.rows = rows;
 		this.cols = cols;
 		data = new float[rows][cols];
 	}
-
+    /**
+     * Creates a matrix from the provided 2D array of float values.
+     *
+     * @param inputData The 2D array representing the matrix.
+     */
 	public Matrix(float[][] inputData) {
 		rows = inputData.length;
 		cols = inputData[0].length;
@@ -36,8 +44,11 @@ public class Matrix {
 	public float[][] getData() {
 		return data;
 	}
-	
-	public float getDate(int row, int col, int value) {
+	// get a single point of data
+	public float getData(int row, int col, int value) {
+        if (row < 0 || row  >= data.length || col < 0 || col >= data[0].length) {
+            throw new IllegalArgumentException("Index out of bounds");
+        }
 		return data[row][col];
 	}
 	
@@ -49,7 +60,13 @@ public class Matrix {
 	 * IllegalArgumentException("New data dimensions must match the matrix dimensions."
 	 * ); } data = newData; }
 	 */
-
+    /**
+     * Adds another matrix to this matrix.
+     *
+     * @param other The matrix to add.
+     * @return A new matrix representing the result of the addition.
+     * @throws IllegalArgumentException If matrix dimensions do not match.
+     */
 	public Matrix add(Matrix other) {
 		boolean rowsInvalid = this.rows != other.rows;
 		boolean colsInvalid = this.cols != other.cols;
@@ -67,7 +84,13 @@ public class Matrix {
 		return new Matrix(result);
 	}
 
-	// subtraciton of the matrix a from other
+    /**
+     * Subtracts another matrix to this matrix.
+     *
+     * @param other The matrix to subtract.
+     * @return A new matrix representing the result of the subtraction.
+     * @throws IllegalArgumentException If matrix dimensions do not match.
+     */
 	public Matrix subtract(Matrix other) {
 		boolean rowsInvalid = this.rows != other.rows;
 		boolean colsInvalid = this.cols != other.cols;
@@ -94,7 +117,13 @@ public class Matrix {
 		}
 	}
 	
-	// Implementation of the basic naive algorithm
+	/**
+     * Multiplies this matrix with another matrix.
+     *
+     * @param other The matrix to multiply with.
+     * @return A new matrix representing the result of the multiplication.
+     * @throws IllegalArgumentException If matrix dimensions are invalid for multiplication.
+     */
     public Matrix multiply(Matrix other) {
         if (cols != other.rows) {
             throw new IllegalArgumentException("Number of columns in the first matrix doesn't match rows in the second.");
@@ -113,7 +142,11 @@ public class Matrix {
         return result;
     }
     
-	// if the vector would need to be printed to console
+    /**
+     * Create a string representation that can be printed
+     *
+     * @return A string representation of the matrix.
+     */
 	public String print() {
 		String result = "";
 		for (int i = 0; i < this.rows; i++) {
@@ -124,5 +157,17 @@ public class Matrix {
 		}
 		return result;
 	}
-
+    @Override
+    public String toString() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("[");
+    	for(int row = 0; row<this.rows; row++) {
+    		 sb.append(Arrays.toString(this.data[row]));
+    		 if(row < (this.rows-1)) {
+    		 	sb.append(",\n");
+    		 }
+    	}
+    	return sb.append("]").toString();
+    	
+    }
 }
