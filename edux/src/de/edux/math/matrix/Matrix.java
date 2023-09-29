@@ -45,7 +45,7 @@ public class Matrix {
 		return data;
 	}
 	// get a single point of data
-	public float getData(int row, int col, int value) {
+	public float getData(int row, int col) {
         if (row < 0 || row  >= data.length || col < 0 || col >= data[0].length) {
             throw new IllegalArgumentException("Index out of bounds");
         }

@@ -3,6 +3,9 @@ package test.java.edux.de.math.matrix;
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Random;
+
 import org.junit.jupiter.api.function.Executable;
 
 import de.edux.math.matrix.Matrix;
@@ -90,5 +93,69 @@ class MatrixTest {
             matrixA.multiply(matrixB);
         });
     }
+    @Test
+    public void testScalarMultiplication() {
+        Matrix matrixA = createTestMatrix(100, 100);
+        float constant = 2.0f;
+        matrixA.scalarMultiply(constant);
+
+        // Add your assertions here to verify scalar multiplication
+        // For example:
+        assertEquals(200.0, matrixA.getData(0, 0));
+        // Add more assertions as needed
+    }
+    @Test
+    public void testMatrixMultiplication() {
+        int rows = 100;
+        int cols = 100;
+
+        // Create two random 100x100 matrices
+        float[][] dataA = generateRandomMatrix(rows, cols);
+        float[][] dataB = generateRandomMatrix(rows, cols);
+
+        Matrix matrixA = new Matrix(dataA);
+        Matrix matrixB = new Matrix(dataB);
+
+        // Calculate the product
+        Matrix result = matrixA.multiply(matrixB);
+
+        // Perform manual multiplication to calculate the expected result
+        float[][] expectedData = new float[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                float sum = 0.0f;
+                for (int k = 0; k < cols; k++) {
+                    sum += dataA[i][k] * dataB[k][j];
+                }
+                expectedData[i][j] = sum;
+            }
+        }
+
+        // Check if the result matches the expected data
+        assertArrayEquals(expectedData, result.getData());
+    }
+
+    // Helper method to generate a random matrix with values between 0 and 1
+    private float[][] generateRandomMatrix(int rows, int cols) {
+        float[][] matrix = new float[rows][cols];
+        Random random = new Random();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = random.nextFloat();
+            }
+        }
+        return matrix;
+    }
+
+    // Helper method to create a test matrix with random data
+    private Matrix createTestMatrix(int rows, int cols) {
+        float[][] testData = new float[rows][cols];
+        // Fill testData with appropriate values for testing
+        // You can use random values or predefined values for testing
+        // For simplicity, you can initialize it with zeros
+        return new Matrix(testData);
+    }
+    // Helper method to generate a random matrix with values between 0 and 1
+
 }
 

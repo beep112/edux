@@ -70,6 +70,20 @@ public class Vector {
         return result;
     }
     /**
+     * Multiplies the vector by a scalar value.
+     *
+     * @param scalar The scalar value to multiply the vector by.
+     * @return A new vector representing the result of the multiplication.
+     */
+    public Vector scalarMultiply(float scalar) {
+        Vector result = new Vector(this.data.length);
+
+        ForkJoinPool pool = new ForkJoinPool();
+        pool.invoke(new ScalarMultiplyTask(this.data, result.data, 0, this.data.length, scalar));
+
+        return result;
+    }
+    /**
      * Computes the dot product of this vector with another vector.
      *
      * @param other The vector to compute the dot product with.
@@ -179,6 +193,37 @@ public class Vector {
             return null;
         }
     }
+    private static class ScalarMultiplyTask extends RecursiveTask<Void> {
+        private final float[] input;
+        private final float[] result;
+        private final int start;
+        private final int end;
+        private final float scalar;
+        private static final int THRESHOLD = 10000; // Adjust as needed
+
+        ScalarMultiplyTask(float[] input, float[] result, int start, int end, float scalar) {
+            this.input = input;
+            this.result = result;
+            this.start = start;
+            this.end = end;
+            this.scalar = scalar;
+        }
+
+        @Override
+        protected Void compute() {
+            if (end - start <= THRESHOLD) {
+                for (int i = start; i < end; i++) {
+                    result[i] = input[i] * scalar;
+                }
+            } else {
+                int mid = (start + end) / 2;
+                ScalarMultiplyTask leftTask = new ScalarMultiplyTask(input, result, start, mid, scalar);
+                ScalarMultiplyTask rightTask = new ScalarMultiplyTask(input, result, mid, end, scalar);
+                invokeAll(leftTask, rightTask);
+            }
+            return null;
+        }
+    }
     // Task to perform vector dot product in parallel
     private static class DotProductTask extends RecursiveTask<Float> {
         private final float[] a;
@@ -240,6 +285,7 @@ public class Vector {
             return null;
         }
     }
+    
 }
 
 
