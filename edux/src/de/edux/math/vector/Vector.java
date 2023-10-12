@@ -7,16 +7,22 @@ import java.util.Arrays;
 
 public class Vector implements Comparable<Vector>{
     private final float[] data;
-
-    public Vector(int size) {
-        this.data = new float[size];
-    }
-
+    
     public Vector(float[] values) {
         this.data = values;
     }
+    
+    public Vector(int size) {
+        this(new float[size]);
+    }
 
-    public int getSize() {
+
+    public Vector() {
+    	this(new float[1]);
+    }
+
+
+	public int getSize() {
         return data.length;
     }
 
