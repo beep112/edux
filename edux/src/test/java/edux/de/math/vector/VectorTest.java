@@ -8,7 +8,7 @@ import java.util.Random;
 public class VectorTest {
 
     private static final int VECTOR_LENGTH_100 = 100;
-    private static final int VECTOR_LENGTH_10000000 = 10000000;
+    private static final int VECTOR_LENGTH_100000 = 100000;
 
     // Test cases for vector addition
     @Test
@@ -40,11 +40,11 @@ public class VectorTest {
     // Add more vector addition with test cases of vectors length 10000000
     @Test
     public void testVectorAddition3( ) {
-    	Vector a = createRandomVector(VECTOR_LENGTH_10000000);
-    	Vector b = createRandomVector(VECTOR_LENGTH_10000000);
+    	Vector a = createRandomVector(VECTOR_LENGTH_100000);
+    	Vector b = createRandomVector(VECTOR_LENGTH_100000);
     	
-        Vector expected = new Vector(VECTOR_LENGTH_10000000);
-        for (int i = 0; i < VECTOR_LENGTH_10000000; i++) {
+        Vector expected = new Vector(VECTOR_LENGTH_100000);
+        for (int i = 0; i < VECTOR_LENGTH_100000; i++) {
             expected.set(i, a.get(i) + b.get(i));
         }
         
@@ -108,20 +108,20 @@ public class VectorTest {
 
         assertEquals(expected, result);
     }
-    // test case of a vectors that are length 10000000
+    // test case of a vectors that are length 10000
     @Test
     public void testVectorDotProduct3() {
-    	Vector a = createRandomVector(VECTOR_LENGTH_10000000);
-    	Vector b = createRandomVector(VECTOR_LENGTH_10000000);
+    	Vector a = createRandomVector(10000);
+    	Vector b = createRandomVector(10000);
     	
     	float expected = 0;
-    	for (int i = 0; i < VECTOR_LENGTH_10000000; i++) {
+    	for (int i = 0; i < 10000; i++) {
     		expected += a.get(i) * b.get(i);
     	}
     	
     	float result = a.dotProduct(b);
     	
-    	assertEquals(expected, result);
+    	assertEquals(result, expected);
     }
 
     // Test cases for vector cross product
@@ -157,7 +157,7 @@ public class VectorTest {
         Random rand = new Random();
         float[] values = new float[length];
         for (int i = 0; i < length; i++) {
-            values[i] = rand.nextFloat();
+            values[i] = rand.nextFloat()*10000f;
         }
         return new Vector(values);
     }

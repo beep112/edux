@@ -1,9 +1,11 @@
 package de.edux.math.vector;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
+
+
 import java.util.Arrays;
 
-public class Vector {
+public class Vector implements Comparable<Vector>{
     private final float[] data;
 
     public Vector(int size) {
@@ -23,6 +25,10 @@ public class Vector {
             throw new IllegalArgumentException("Index out of bounds");
         }
         return data[index];
+    }
+    
+    public float[] getData() {
+    	return data;
     }
 
     public void set(int index, float value) {
@@ -127,6 +133,37 @@ public class Vector {
     public String toString() {
         return Arrays.toString(data);
     }
+    
+    @Override
+    public int compareTo(Vector otherVector) {
+        if (this.data.length != otherVector.data.length) {
+            // Vectors with different lengths are not directly comparable.
+            return -1;
+        }
+
+        // Compare elements element by element
+        for (int i = 0; i < this.data.length; i++) {
+            int cmp = Float.compare(this.data[i], otherVector.data[i]);
+            if (cmp != 0) {
+                return cmp;
+            }
+        }
+
+        // If all elements are equal, the vectors are considered equal.
+        return 0;
+    }
+    
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		/* We cast obj so we can access the vector instance variables */
+		Vector vector = (Vector) obj;
+
+		return this.compareTo(vector) == 0;
+	}
     // Task to perform vector addition in parallel
     private static class VectorAddTask extends RecursiveTask<Void> {
         private final float[] a;

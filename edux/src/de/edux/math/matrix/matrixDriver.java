@@ -1,5 +1,6 @@
 package de.edux.math.matrix;
 
+import de.edux.math.vector.Vector;
 
 public class matrixDriver {
 
@@ -41,6 +42,15 @@ public class matrixDriver {
 		Matrix b = new Matrix(data2);
 		Matrix result = a.add(b);
 		System.out.println(result); 
+		
+		float[][] data3 = { {1f,2f}, {3f,4f} };
+		float[] vector = {2,2};
+		Matrix c = new Matrix(data3);
+		Vector d = new Vector(vector);
+		// should create the vector [8, 12]
+		System.out.println(c.multiply(d));
+		
+		
 		//System.out.println("[[14.54457, 17.10569, 19.0111, 20.80108],\n"
 		//		+ "[7.18182, 9.20203, 11.0203, 12.67255],\n"
 		//		+ "[18.24002, 21.00248, 23.89848, 24.48784],\n"
